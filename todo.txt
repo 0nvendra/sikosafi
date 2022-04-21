@@ -1,0 +1,87 @@
+=TABEL
+rules-ok
+-desc
+-urutan
+-img
+tipe room-ok
+-desc;ex duluxe, preimium dll
+room-ok
+-nomer room
+-lantai
+-tipe room
+user-ok
+-nik
+-nama
+-dob
+-email
+-pass
+admin-ok
+-nama
+-email
+-pass
+sewa/booking-ok
+-faktur/ordercode
+-room_id
+-durasi(hari)
+-start_at
+-end_at
+deposit-ok
+-user_id
+-jumlah
+-status
+balance/catatan keuangan-ok
+-order_id
+-deposit_id
+-user_id
+-jumlah
+report
+-sewa bulanan
+-sewa tahunan
+visit
+-ipaddress
+wa messaging
+notifboking
+-user_id
+-messages
+-dikirim(1,2,3 atau lebih)
+=FRONTEND KOMPRO
+index
+fasilitas
+tata cara penyewaan
+peraturan
+=BACKEND CURD
+user
+-c
+-r
+-u
+-d
+rules
+-c
+-r
+-u
+-d
+tipe room
+-c
+-r
+-u
+-d
+admin
+-c
+-r
+-u
+-d
+booking
+-c
+-r
+-u
+-d
+deposito
+-c
+-r
+-u
+-d
+fasilitas
+-c
+-r
+-u
+-d
