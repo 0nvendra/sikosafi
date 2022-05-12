@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
 
 class RuleController extends Controller
 {
@@ -12,9 +15,18 @@ class RuleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    private $name = 'Rule';
+    public function index(Request $request)
     {
-        //
+        return Inertia::render('rule/index', [
+            'rules' => Rule::when($request->desc, function ($query, $q) {
+                $query->where('desc', 'like', '%' . $q . '%');
+            })
+                ->orderBy("no", 'asc')
+                ->paginate(10)
+                ->withQueryString(),
+            'name' => $this->name
+        ]);
     }
 
     /**
@@ -24,7 +36,9 @@ class RuleController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('rule/create', [
+            'name' => $this->name,
+        ]);
     }
 
     /**
@@ -35,7 +49,30 @@ class RuleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $rules = [
+                'no' => ['required', 'unique:rules'],
+                'desc' => ['required'],
+            ];
+
+            $messages = [
+                // 'required' => 'Please fill :attribute',
+            ];
+
+            $attributes = [
+                'no' => 'No',
+                'desc' => 'Peraturan',
+            ];
+
+            $validator = Validator::make($request->all(), $rules, $messages, $attributes)->validate();
+            Rule::create($validator);
+            DB::commit();
+            return redirect()->route('rule.index');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
     /**
@@ -46,7 +83,11 @@ class RuleController extends Controller
      */
     public function show(Rule $rule)
     {
-        //
+        // return $rule;
+        return Inertia::render('rule/show', [
+            'name' => $this->name,
+            'rule' => $rule,
+        ]);
     }
 
     /**
@@ -57,7 +98,10 @@ class RuleController extends Controller
      */
     public function edit(Rule $rule)
     {
-        //
+        return Inertia::render('rule/edit', [
+            'name' => $this->name,
+            'rule' => $rule,
+        ]);
     }
 
     /**
@@ -69,7 +113,30 @@ class RuleController extends Controller
      */
     public function update(Request $request, Rule $rule)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $rules = [
+                'no' => ['required'],
+                'desc' => ['required'],
+            ];
+
+            $messages = [
+                // 'required' => 'Please fill :attribute',
+            ];
+
+            $attributes = [
+                'no' => 'No',
+                'desc' => 'Peraturan',
+            ];
+
+            $validator = Validator::make($request->all(), $rules, $messages, $attributes)->validate();
+            $rule->update($validator);
+            DB::commit();
+            return redirect()->route('rule.index');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
     /**
@@ -80,6 +147,14 @@ class RuleController extends Controller
      */
     public function destroy(Rule $rule)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $rule->delete();
+            DB::commit();
+            return redirect()->route('rule.index');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 }

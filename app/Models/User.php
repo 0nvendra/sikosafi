@@ -21,10 +21,11 @@ class User extends Authenticatable
     protected $fillable = [
         'nama',
         'email',
-        'password',
         'nik',
         'dob',
+        'password',
         'status',
+        'ktp_img',
     ];
 
     /**
@@ -44,5 +45,27 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'created_at' => 'date:d M Y',
     ];
+    protected $appends = [
+        'statusSpan',
+    ];
+
+    public function GetStatusSpanAttribute()
+    {
+        switch ($this->status) {
+            case 1:
+                return '<span class="badge badge-light-warning">Belum Verifikasi Email</span>';
+                break;
+            case 2:
+                return '<span class="badge badge-light-success">Aktif</span>';
+                break;
+            case 3:
+                return '<span class="badge badge-light-danger">Non-Aktif</span>';
+                break;
+            default:
+                # code...
+                break;
+        }
+    }
 }

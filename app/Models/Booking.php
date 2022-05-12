@@ -15,4 +15,8 @@ class Booking extends Model
         'start_at',
         'end_at',
     ];
+    protected $casts = [
+        // 'start_at' => 'date:d M Y',
+        // 'end_at' => 'date:d M Y',
+    ];
 }

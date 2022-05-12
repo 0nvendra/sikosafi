@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\FasilitasController;
+use App\Http\Controllers\FrontController;
+use App\Http\Controllers\RoomController;
+use App\Http\Controllers\RuleController;
+use App\Http\Controllers\TipeRoomController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -15,17 +22,45 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
+// 
+#User Side / FrontEnd
+Route::group(['prefix' => ''], function () {
+    Route::get('/', [FrontController::class, 'index'])->name('front.index');
+    Route::get('/tata-cara', [FrontController::class, 'tataCara'])->name('front.tata');
+    Route::get('/rooms', [FrontController::class, 'room'])->name('front.room');
+    Route::get('/peraturan', [FrontController::class, 'peraturan'])->name('front.rule');
+    Route::get('/booking', [FrontController::class, 'booking'])->name('front.booking');
+    Route::get('/login', [UserController::class, 'getLogin'])->name('login');
+    Route::post('/login', [UserController::class, 'postLogin'])->name('user.login');
+    Route::get('/register', [UserController::class, 'getRegister'])->name('register');
+    Route::post('/register', [UserController::class, 'postRegister'])->name('user.register');
+    Route::get('/logout', [UserController::class, 'logout'])->name('logout');
+    Route::get('/evaluasi', [UserController::class, 'evaluasi'])->name('evaluasi');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return redirect()->route('user.index');
+//     // return Inertia::render('Dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+# Admin side
+Route::get('/admin/login', [AdminController::class, 'login'])->name('admin.login');
+Route::post('/admin/login', [AdminController::class, 'exec'])->name('admin.login.exec');
+Route::get('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
-require __DIR__.'/auth.php';
+Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
+    Route::resource('user', UserController::class);
+    Route::resource('admin', AdminController::class);
+    Route::resource('rule', RuleController::class);
+    Route::resource('tipeRoom', TipeRoomController::class);
+    Route::resource('fasilitas', FasilitasController::class);
+    Route::resource('room', RoomController::class);
+});
+// require __DIR__ . '/auth.php';

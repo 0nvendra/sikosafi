@@ -12,4 +12,5 @@ class TipeRoom extends Model
     protected $fillable = [
         'desc',
     ];
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 }

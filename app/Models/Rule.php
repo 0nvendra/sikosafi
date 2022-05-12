@@ -10,6 +10,7 @@ class Rule extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = [
+        'no',
         'desc',
     ];
 }

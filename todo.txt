@@ -50,12 +50,12 @@ fasilitas
 tata cara penyewaan
 peraturan
 =BACKEND CURD
-user
+user-ok
 -c
 -r
 -u
 -d
-rules
+rules-ok
 -c
 -r
 -u
@@ -65,7 +65,7 @@ tipe room
 -r
 -u
 -d
-admin
+admin-ok
 -c
 -r
 -u
@@ -85,3 +85,10 @@ fasilitas
 -r
 -u
 -d
+
+
+depositnya di hilangin aja langsung approval
+harga kamar per kamar
+filter kamar fasilitas kamar(waktu milih kamar).
+informasi nomer bank(ada lama batas transfer)
+user + 

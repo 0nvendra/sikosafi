@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('rules', function (Blueprint $table) {
             $table->id();
+            $table->integer('no');
             $table->longText('desc');
             $table->softDeletes();
             $table->timestamps();

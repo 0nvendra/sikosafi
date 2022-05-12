@@ -12,4 +12,12 @@ class Fasilitas extends Model
     protected $fillable = [
         'desc',
     ];
+    protected $hidden = ['created_at', 'updated_at'];
+    protected $appends = ['descF'];
+
+    public function GetDescFAttribute()
+    {
+        $arr = explode('-', $this->desc);
+        return $arr;
+    }
 }
