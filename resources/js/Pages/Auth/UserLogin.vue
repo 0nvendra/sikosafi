@@ -1,5 +1,9 @@
 <template>
-    <div >
+    <div
+        style="
+            background-image: url(/assets/media/illustrations/sketchy-1/14.png;;;
+        "
+    >
         <!--begin::Content-->
         <div
             class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20"
@@ -19,8 +23,18 @@
                     <!--begin::Heading-->
                     <div class="text-center mb-10">
                         <!--begin::Title-->
-                        <h2>SIKOSAFI</h2>
+                        <h1 class="text-dark mb-3">Masuk ke SIKOSAFI</h1>
                         <!--end::Title-->
+                        <!--begin::Link-->
+                        <div class="text-gray-400 fw-bold fs-4">
+                            Pengguna baru?
+                            <Link
+                                :href="route('register')"
+                                class="link-primary fw-bolder"
+                                >Buat Akun</Link
+                            >
+                        </div>
+                        <!--end::Link-->
                     </div>
                     <!--begin::Heading-->
                     <!--begin::Input group-->
@@ -64,13 +78,7 @@
                             class="btn btn-lg btn-primary w-100 mb-5"
                             :disabled="form.processing"
                         >
-                            <span class="indicator-label">Continue</span>
-                            <span class="indicator-progress"
-                                >Please wait...
-                                <span
-                                    class="spinner-border spinner-border-sm align-middle ms-2"
-                                ></span
-                            ></span>
+                            <span class="indicator-label">Lanjutkan</span>
                         </button>
                         <!--end::Submit button-->
                         <!--begin::Separator-->
@@ -112,8 +120,9 @@ export default {
         submit() {
             this.form.post(this.route("user.login"), {
                 onFinish: (data) => {
-                    console.log(data);
-                    // window.location.href = route("front.index");
+                    // console.log(data);
+                    window.location.href = route("front.index");
+                    window.location.reload;
                 },
             });
         },

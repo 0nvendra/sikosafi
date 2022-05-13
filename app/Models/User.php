@@ -21,11 +21,13 @@ class User extends Authenticatable
     protected $fillable = [
         'nama',
         'email',
+        'tlp',
         'nik',
         'dob',
         'password',
         'status',
         'ktp_img',
+        'remember_token'
     ];
 
     /**
@@ -36,6 +38,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'email',
+        // 'nik',
     ];
 
     /**

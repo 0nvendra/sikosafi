@@ -111,6 +111,7 @@
                         </td>
                         <td class="px-4 py-2">
                             <img
+                                @click="_img(row)"
                                 :src="'/storage/' + row.ktp_img"
                                 style="
                                     width: 200px;
@@ -202,6 +203,46 @@
         </div>
         <!--end::Card body-->
     </div>
+    <!-- modal -->
+    <div class="modal fade" id="modal_detail" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen p-10">
+            <div class="modal-content">
+                <!-- <div class="text-center px-5">
+                    <img
+                        src="/assets/media/illustrations/sketchy-1/2.png"
+                        alt=""
+                        class="mw-100 h-200px h-sm-325px"
+                    />
+                </div> -->
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        NAMA: {{ data_modal.nama }}
+                        <br>
+                        NIK: {{ data_modal.nik }}
+                    </h5>
+
+                    <!--begin::Close-->
+                    <div
+                        class="btn btn-icon btn-sm btn-active-light-primary ms-2"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span class="svg-icon svg-icon-2x"></span>
+                    </div>
+                    <!--end::Close-->
+                </div>
+
+                <div class="modal-body">
+                    <img
+                        :src="data_modal.ktp_img"
+                        class="img-responsive"
+                        style="max-width: 1200px !important"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end modal -->
 </template>
 <script>
 import LayoutApp from "@/Layouts/Admin.vue";
@@ -222,9 +263,10 @@ export default {
     },
     data() {
         return {
-            search: "",
-            edit: false,
-            formLoading: false,
+            data_modal: {
+                nama: "",
+                nik: "",
+            },
         };
     },
     created() {},
@@ -271,6 +313,12 @@ export default {
                     });
                 }
             });
+        },
+        _img(row) {
+            this.data_modal.nama = row.nama;
+            this.data_modal.nik = row.nik;
+            this.data_modal.ktp_img = "/storage/" + row.ktp_img;
+            $("#modal_detail").modal("show");
         },
     },
 };

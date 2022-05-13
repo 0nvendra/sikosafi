@@ -3,6 +3,9 @@
         <!--begin::Content-->
         <div
             class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20"
+            style="
+            background-image: url(/assets/media/illustrations/sketchy-1/14.png;;
+        "
         >
             <!--begin::Logo-->
             <a class="mb-12">
@@ -27,12 +30,10 @@
                             <!--end::Title-->
                             <!--begin::Link-->
                             <div class="text-gray-400 fw-bold fs-4">
-                                Already have an account?
-                                <a
-                                    href="../../demo1/dist/authentication/flows/basic/sign-in.html"
-                                    class="link-primary fw-bolder"
-                                    >Sign in here</a
-                                >
+                                Sudah memiliki akun?
+                                <Link :href="route('login')" class="link-primary fw-bolder"
+                                >Halaman Login</Link
+                            >
                             </div>
                             <!--end::Link-->
                         </div>
@@ -69,6 +70,23 @@
                                 name="email"
                                 autocomplete="off"
                                 v-model="form.nik"
+                                requried
+                            />
+                        </div>
+                        <!--begin::Input group-->
+                        <!--begin::Input group-->
+                        <div class="fv-row mb-7">
+                            <label
+                                class="required form-label fw-bolder text-dark fs-6"
+                                >No Whatsapp</label
+                            >
+                            <input
+                                class="form-control form-control-lg form-control-solid"
+                                type="email"
+                                placeholder=""
+                                name="email"
+                                autocomplete="off"
+                                v-model="form.telp"
                                 requried
                             />
                         </div>
@@ -223,6 +241,7 @@ export default {
             form: {
                 nama: null,
                 email: null,
+                telp: null,
                 password: null,
                 password_confirmation: null,
                 nik: null,
@@ -246,9 +265,10 @@ export default {
                 preserveScroll: true,
                 onSuccess: (success) => {
                     this.btn_text = "Register";
-                    Toast.fire({
+                    Swal.fire({
                         icon: "success",
-                        title: "Berhasil ditambah",
+                        title: "Register berhasil",
+                        text: "Harap verifikasi melalui email",
                     });
                 },
                 onError: (error) => {

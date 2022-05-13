@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\RoomController;
@@ -37,13 +38,17 @@ Route::group(['prefix' => ''], function () {
     Route::get('/tata-cara', [FrontController::class, 'tataCara'])->name('front.tata');
     Route::get('/rooms', [FrontController::class, 'room'])->name('front.room');
     Route::get('/peraturan', [FrontController::class, 'peraturan'])->name('front.rule');
-    Route::get('/booking', [FrontController::class, 'booking'])->name('front.booking');
+    // Route::get('/booking', [FrontController::class, 'booking'])->name('front.booking');
     Route::get('/login', [UserController::class, 'getLogin'])->name('login');
     Route::post('/login', [UserController::class, 'postLogin'])->name('user.login');
     Route::get('/register', [UserController::class, 'getRegister'])->name('register');
     Route::post('/register', [UserController::class, 'postRegister'])->name('user.register');
     Route::get('/logout', [UserController::class, 'logout'])->name('logout');
     Route::get('/evaluasi', [UserController::class, 'evaluasi'])->name('evaluasi');
+    Route::group(['middleware' => 'auth:web'], function () {
+        Route::post('/order', [FrontController::class, 'newOrder'])->name('order');
+        Route::get('/history-saya', [FrontController::class, 'history'])->name('front.history');
+    });
 });
 
 // Route::get('/dashboard', function () {
@@ -62,5 +67,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::resource('tipeRoom', TipeRoomController::class);
     Route::resource('fasilitas', FasilitasController::class);
     Route::resource('room', RoomController::class);
+    #booking
+    Route::get('booking-approval', [BookingController::class, 'index'])->name('approval');
+    Route::post('approve', [BookingController::class, 'approve'])->name('approve');
+    Route::post('cancelOrder', [BookingController::class, 'cancelOrder'])->name('cancelOrder');
+    Route::get('daftar-boking', [BookingController::class, 'listed'])->name('listed');
 });
 // require __DIR__ . '/auth.php';

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -56,6 +57,7 @@ class UserController extends Controller
             $rules = [
                 'nama' => ['required'],
                 'email' => ['required', 'unique:users', 'max:50'],
+                'telp' => ['required'],
                 'nik' => ['required', 'unique:users'],
                 'dob' => ['required'],
                 'status' => ['required'],
@@ -69,6 +71,7 @@ class UserController extends Controller
             $attributes = [
                 'nama' => 'Nama',
                 'email' => 'Email',
+                'telp' => 'No Whatsapp',
                 'nik' => 'NIK',
                 'dob' => 'TANGGAL LAHIR',
             ];
@@ -269,6 +272,7 @@ class UserController extends Controller
             ];
             $request['ktp_img'] = $image_path;
             $request['status'] = 1;
+            $request['remember_token'] = Str::Uuid();
             $validator = Validator::make($request->all(), $rules, $messages, $attributes)->validate();
             $validator['password'] = bcrypt($validator['password']);
             User::create($validator);
@@ -283,5 +287,14 @@ class UserController extends Controller
     public function evaluasi()
     {
         return 'a';
+    }
+
+    public function verifikasi_email($remember_token)
+    {
+        $user = User::where('remember_token', $remember_token)->first();
+        $user->status = 2;
+        $user->save();
+        // return 'berhasil verifikasi';
+        return redirect('/');
     }
 }

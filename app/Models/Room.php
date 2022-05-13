@@ -30,13 +30,13 @@ class Room extends Model
         if ($booking && $booking->end_at > $now) {
             $r = [
                 'status' => false,
-                'span' => '<span class="badge badge-light-danger fs-8 fw-bolder">Tidak Tersedia</span>',
+                'span' => '<span class="badge badge-light-danger fs-8 fw-bolder">Booked</span>',
                 'end_contract' => $booking->end_at,
             ];
         } else {
             $r = [
                 'status' => true,
-                'span' => '<span class="badge badge-light-success fs-8 fw-bolder">Tersedia</span>',
+                'span' => '<span class="badge badge-light-success fs-8 fw-bolder">Available</span>',
                 'end_contract' => null,
             ];
         }

@@ -91,11 +91,12 @@
                                         <div class="menu-item">
                                             <!--begin::Menu link-->
                                             <Link
-                                                :href="route('front.tata')"
+                                                :href="route('front.rule')"
                                                 class="menu-link nav-link active py-3 px-4 px-xxl-6"
                                                 data-kt-scroll-toggle="true"
                                                 data-kt-drawer-dismiss="true"
-                                                >Tata Cara Sewa</Link
+                                                >Peraturan & Tata Cara
+                                                Sewa</Link
                                             >
                                             <!--end::Menu link-->
                                         </div>
@@ -113,26 +114,13 @@
                                             <!--end::Menu link-->
                                         </div>
                                         <!--end::Menu item-->
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item">
-                                            <!--begin::Menu link-->
-                                            <Link
-                                                :href="route('front.rule')"
-                                                class="menu-link nav-link active py-3 px-4 px-xxl-6"
-                                                data-kt-scroll-toggle="true"
-                                                data-kt-drawer-dismiss="true"
-                                                >Peraturan</Link
-                                            >
-                                            <!--end::Menu link-->
-                                        </div>
-                                        <!--end::Menu item-->
                                     </div>
                                     <!--end::Menu-->
                                 </div>
                             </div>
                             <!--end::Menu wrapper-->
                             <!--begin::Toolbar-->
-                            <div class="text-end ms-1" v-if="user == []">
+                            <div class="text-end ms-1" v-if="user == null">
                                 <Link
                                     :href="route('login')"
                                     class="btn btn-success"
@@ -144,14 +132,24 @@
                             <div class="menu-item" v-else>
                                 <!--begin::Menu link-->
                                 <Link
-                                    :href="route('front.index')"
+                                    :href="route('front.history')"
                                     class="menu-link nav-link active py-3 px-4 px-xxl-6"
                                     data-kt-scroll-toggle="true"
                                     data-kt-drawer-dismiss="true"
-                                    >History Saya</Link
+                                    >History saya</Link
                                 >
                                 <!--end::Menu link-->
                             </div>
+                            <div class="text-end ms-1" v-if="user != null">
+                                <Link
+                                    :href="route('logout')"
+                                    class="btn btn-success"
+                                    data-kt-scroll-toggle="true"
+                                    data-kt-drawer-dismiss="true"
+                                    >Logout</Link
+                                >
+                            </div>
+
                             <!--end::Toolbar-->
                         </div>
                         <!--end::Wrapper-->
@@ -259,14 +257,16 @@ export default {
     },
     data() {
         return {
-            user: [],
+            user: null,
         };
     },
     created() {
-        this.user = this.$attrs.auth.user;
-        // console.clear();
-        // console.log(this.user);
-        // this.gudang = this.$attrs.auth.user.gudang.name;
+        if (this.$attrs.auth.user != null) {
+            this.user = this.$attrs.auth.user;
+        } else {
+            this.user = null;
+        }
+        console.log(this.user);
     },
 
     methods: {},

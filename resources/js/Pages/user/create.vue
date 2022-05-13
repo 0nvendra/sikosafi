@@ -25,7 +25,7 @@
                 </div>
                 <div class="card-content">
                     <div class="row mb-5">
-                        <div class="col-md-6 fv-row fv-plugins-icon-container">
+                        <div class="col-md-4 fv-row fv-plugins-icon-container">
                             <label class="required fs-5 fw-bold mb-2"
                                 >NAMA</label
                             >
@@ -37,7 +37,7 @@
                                 required
                             />
                         </div>
-                        <div class="col-md-6 fv-row fv-plugins-icon-container">
+                        <div class="col-md-4 fv-row fv-plugins-icon-container">
                             <label class="required fs-5 fw-bold mb-2"
                                 >EMAIL</label
                             >
@@ -46,6 +46,18 @@
                                 class="form-control form-control-solid"
                                 placeholder=""
                                 v-model="form.email"
+                                required
+                            />
+                        </div>
+                        <div class="col-md-4 fv-row fv-plugins-icon-container">
+                            <label class="required fs-5 fw-bold mb-2"
+                                >NO TELP/WHATSAPP</label
+                            >
+                            <input
+                                type="phone"
+                                class="form-control form-control-solid"
+                                placeholder=""
+                                v-model="form.telp"
                                 required
                             />
                         </div>
@@ -165,6 +177,7 @@ export default {
                 id: null,
                 nama: null,
                 email: null,
+                telp: null,
                 password: null,
                 password_confirmation: null,
                 nik: null,

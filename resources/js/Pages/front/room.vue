@@ -5,7 +5,7 @@
             <div class="d-flex flex-stack mb-5">
                 <!--begin::Title-->
                 <h3 class="text-black">Rooms</h3>
-                <!--end::Title-->                
+                <!--end::Title-->
             </div>
             <!--end::Content-->
             <!--begin::Separator-->
@@ -134,6 +134,7 @@
                                         type="submit"
                                         class="btn btn-danger btn-sm"
                                         :disabled="!row.tersedia.status"
+                                        @click="_preOrder(row)"
                                     >
                                         <span class="indicator-label"
                                             >Booking</span
@@ -153,6 +154,60 @@
             </div>
         </div>
     </div>
+    <!-- modal -->
+    <div class="modal fade" id="modal_order" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered mw-650px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">UNGGAH BUKTI TRANSFER</h4>
+
+                    <!--begin::Close-->
+                    <div
+                        class="btn btn-icon btn-sm btn-active-light-primary ms-2"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span class="svg-icon svg-icon-2x"></span>
+                    </div>
+                    <!--end::Close-->
+                </div>
+
+                <div class="modal-body">
+                    <h5>Nomor Rekening : 788401004189538 (BRI)</h5>
+
+                    <div class="fv-row mb-7">
+                        <label
+                            class="required form-label fw-bolder text-dark fs-6"
+                            >Bukti Transfer</label
+                        >
+                        <input
+                            class="form-control form-control-lg form-control-solid"
+                            type="file"
+                            @change="previewImage"
+                            ref="photo"
+                            accept="image/png, image/gif, image/jpeg"
+                            autocomplete="off"
+                            requried
+                        />
+                    </div>
+                    <center>
+                        <img v-if="url" :src="url" class="w-50 h-80" />
+                    </center>
+                </div>
+                <div class="modal-footer flex-center">
+                    <!--begin::Button-->
+                    <button
+                        type="submit"
+                        class="btn btn-danger"
+                        @click="_order()"
+                    >
+                        <span class="indicator-label">BOOKING</span>
+                    </button>
+                    <!--end::Button-->
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 import LayoutApp from "@/Layouts/Front.vue";
@@ -169,6 +224,8 @@ export default {
     data() {
         return {
             sClass: "col-md-4",
+            data_modal: {},
+            url: null,
         };
     },
     created() {},
@@ -189,6 +246,37 @@ export default {
                     onError: (error) => {},
                 }
             );
+        },
+        _preOrder(row) {
+            this.data_modal = row;
+            $("#modal_order").modal("show");
+            // alert("ok?");
+        },
+        previewImage(e) {
+            const file = e.target.files[0];
+            this.url = URL.createObjectURL(file);
+        },
+        _order() {
+            $(".modal-backdrop").remove();
+            if (this.$refs.photo) {
+                this.data_modal.image = this.$refs.photo.files[0];
+            }
+            this.$inertia.post(route("order"), this.data_modal, {
+                preserveScroll: true,
+                onSuccess: (success) => {
+                    // Swal.fire({
+                    //     icon: "success",
+                    //     title: "Room Booked",
+                    //     text: "Bukti transfer akan di check. Harap menunggu konfirmasi admin",
+                    // });
+                },
+                onError: (error) => {
+                    this.errors = [];
+                    Object.entries(this.$attrs.errors).map((arr) => {
+                        this.errors.push(arr[1]);
+                    });
+                },
+            });
         },
     },
 };

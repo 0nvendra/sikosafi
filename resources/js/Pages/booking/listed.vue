@@ -38,7 +38,7 @@
                         type="text"
                         data-kt-customer-table-filter="search"
                         class="form-control form-control-solid w-250px ps-15"
-                        placeholder="Search By Nomor Room"
+                        placeholder="Search By Nomor Faktur"
                         @input="_search($event.target.value)"
                     />
                 </div>
@@ -50,7 +50,7 @@
                 <!--begin::Toolbar-->
                 <div class="d-flex">
                     <Link
-                        :href="route('room.create')"
+                        :href="route('rule.create')"
                         type="button"
                         class="btn btn-light-primary btn-sm"
                     >
@@ -87,31 +87,49 @@
             >
                 <thead>
                     <tr>
-                        <th class="min-w-5px">No Room</th>
-                        <th class="min-w-5px">Lantai</th>
-                        <th class="min-w-125px">Tipe</th>
-                        <th class="min-w-150px">Harga</th>
-                        <th class="min-w-100px">Status</th>
+                        <th class="min-w-50px">Status</th>
+                        <th class="min-w-75px">Faktur</th>
+                        <th class="min-w-100px">Pengguna</th>
+                        <th class="min-w-25px">Nomor Room</th>
+                        <th class="min-w-100px">Rincian</th>
+                        <th class="min-w-100px">Biaya</th>
                         <th class="min-w-50px"></th>
                     </tr>
                 </thead>
                 <tbody class="fw-bold text-gray-600">
-                    <tr v-for="(row, i) in rooms.data" :key="row.id">
+                    <tr v-for="row in bookings.data" :key="row.id">
                         <td>
-                            {{ row.nomor_room }}
+                            <div v-html="row.statusSpan"></div>
                         </td>
                         <td>
-                            {{ row.lantai }}
+                            {{ row.order_code }}
                         </td>
                         <td>
-                            {{ row.tipe_room.desc }}
+                            {{ row.user.nama }}
+                        </td>
+                        <td>
+                            {{ row.room.nomor_room }}
+                        </td>
+                        <td>
+                            Tgl Pemesanan : {{ row.created_at }}
+                            <hr />
+                            <div v-if="row.start_at == null">
+                                Tgl mulai sewa : Belum ditetapkan
+                            </div>
+                            <div v-else>
+                                Tgl mulai sewa : {{ row.start_at }}
+                            </div>
+                            <div v-if="row.end_at == null">
+                                Tgl sewa berakhir : Belum ditetapkan
+                            </div>
+                            <div v-else>
+                                Tgl sewa berakhir : {{ row.end_at }}
+                            </div>
+                            <hr />
+                            <b>APPROVED BY : </b> {{ row.admin.nama }}
                         </td>
                         <td>
                             {{ $filters.currency(row.price) }}
-                        </td>
-                        <td>
-                            <div v-html="row.tersedia.span">                                
-                            </div>
                         </td>
                         <td class="text-end">
                             <div
@@ -119,9 +137,10 @@
                                 role="group"
                                 aria-label="Basic example"
                             >
-                                <Link
-                                    :href="route('room.show', row.id)"
+                                <button
+                                    type="button"
                                     class="btn btn-icon btn-sm btn-active-light-primary w-30px h-30px me-3"
+                                    @click="_img(row)"
                                 >
                                     <span class="svg-icon svg-icon-3">
                                         <svg
@@ -137,63 +156,55 @@
                                             />
                                         </svg>
                                     </span>
-                                </Link>
-                                <Link
-                                    :href="route('room.edit', row.id)"
-                                    type="button"
-                                    class="btn btn-icon btn-sm btn-active-light-primary w-30px h-30px me-3"
-                                >
-                                    <span class="svg-icon svg-icon-3">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="16"
-                                            height="16"
-                                            fill="orange"
-                                            class="bi bi-pen"
-                                            viewBox="0 0 16 16"
-                                        >
-                                            <path
-                                                d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"
-                                            />
-                                        </svg>
-                                    </span>
-                                </Link>
-                                <button
-                                    type="button"
-                                    class="btn btn-icon btn-sm btn-active-light-primary w-30px h-30px me-3"
-                                    @click="_remove(row.id)"
-                                >
-                                    <span class="svg-icon svg-icon-3">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="16"
-                                            height="16"
-                                            fill="red"
-                                            class="bi bi-trash2"
-                                            viewBox="0 0 16 16"
-                                        >
-                                            <path
-                                                d="M14 3a.702.702 0 0 1-.037.225l-1.684 10.104A2 2 0 0 1 10.305 15H5.694a2 2 0 0 1-1.973-1.671L2.037 3.225A.703.703 0 0 1 2 3c0-1.105 2.686-2 6-2s6 .895 6 2zM3.215 4.207l1.493 8.957a1 1 0 0 0 .986.836h4.612a1 1 0 0 0 .986-.836l1.493-8.957C11.69 4.689 9.954 5 8 5c-1.954 0-3.69-.311-4.785-.793z"
-                                            />
-                                        </svg>
-                                    </span>
                                 </button>
                             </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <div class="modal-footer flex-center" v-if="rooms.data.length < 1">
+            <div
+                class="modal-footer flex-center"
+                v-if="bookings.data.length < 1"
+            >
                 {{ name }} tidak ditemukan
             </div>
             <pagination
                 class="mt-6 dataTables_paginate paging_simple_numbers"
-                :links="rooms.links"
+                :links="bookings.links"
             />
             <!--end::Table-->
         </div>
-        <!--end::Card body-->
     </div>
+    <!-- modal -->
+    <div class="modal fade" id="modal_detail" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen p-10">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        BUKTI TRANSFER FAKTUR NO : {{ data_modal.order_code }}
+                    </h5>
+
+                    <!--begin::Close-->
+                    <div
+                        class="btn btn-icon btn-sm btn-active-light-primary ms-2"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span class="svg-icon svg-icon-2x"></span>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <div class="modal-body">
+                    <img
+                        :src="data_modal.bukti_tf"
+                        class="img-responsive"
+                        style="max-width: 1200px !important"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end modal -->
 </template>
 <script>
 import LayoutApp from "@/Layouts/Admin.vue";
@@ -210,21 +221,23 @@ export default {
     },
     props: {
         name: String,
-        rooms: Object,
+        bookings: Object,
     },
     data() {
         return {
-            search: "",
-            edit: false,
-            formLoading: false,
+            url: null,
+            data_modal: {
+                nama: "",
+                nik: "",
+            },
         };
     },
     created() {},
     methods: {
         _search(val) {
             this.$inertia.get(
-                route("room.index"),
-                { nomor_room: val },
+                route("rule.index"),
+                { desc: val },
                 {
                     preserveScroll: true,
                     preserveState: true,
@@ -233,36 +246,10 @@ export default {
                 }
             );
         },
-        _remove(id) {
-            Swal.fire({
-                title: "Konfirmasi",
-                text: "Apakah anda ingin menghapus data ini ?",
-                showCancelButton: true,
-                // confirmButtonColor: "lightblue",
-                // cancelButtonColor: "red",
-                confirmButtonText: "Ya, Saya yakin !",
-                reverseButtons: true,
-            }).then((result) => {
-                if (result.value) {
-                    this.$inertia.delete(route("room.destroy", id), {
-                        preserveScroll: true,
-                        onSuccess: (success) => {
-                            // alert('a');
-                            console.log(success);
-                            Toast.fire({
-                                icon: "success",
-                                title: "Berhasil dihapus",
-                            });
-                        },
-                        onError: (error) => {
-                            Toast.fire({
-                                icon: "Ooops",
-                                title: "somethin wrong!",
-                            });
-                        },
-                    });
-                }
-            });
+        _img(row) {
+            this.data_modal.bukti_tf = "/storage/" + row.bukti_tf;
+            this.data_modal.order_code = row.order_code;
+            $("#modal_detail").modal("show");
         },
     },
 };

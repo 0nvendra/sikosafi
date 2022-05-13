@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Models\Fasilitas;
 use App\Models\Room;
 use App\Models\Rule;
 use App\Models\TipeRoom;
 use App\Models\Visitor;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class FrontController extends Controller
@@ -85,10 +89,97 @@ class FrontController extends Controller
         ]);
     }
 
-    public function booking()
+    public function newOrder(Request $request)
     {
-        return Inertia::render('front/home');
+        // return $request->all();
+        // return Inertia::render('front/home');
+        // if (Auth::user() == []) {
+        //     return 
+        //     return redirect()->route('login');
+        // }
+        // Auth::id();
+        try {            
+            DB::beginTransaction();
+            $image_path = '';
+            if ($request->hasFile('image')) {
+                $image_path = $request->file('image')->store('image', 'public');
+            }
+            $rules = [
+                'order_code' => ['required'],
+                'user_id' => ['required'],
+                'room_id' => ['required'],
+                'start_at' => [''],
+                'end_at' => [''],
+                'price' => ['required'],
+                'bukti_tf' => ['required'],
+                'status_id' => [''],
+            ];
+
+            $messages = [
+                // 'required' => 'Please fill :attribute',
+            ];
+
+            $attributes = [
+                'order_code' => 'Faktur',
+                'user_id' => 'Pengguna',
+                'room_id' => 'Room',
+                'start_at' => 'Awal sewa invalid',
+                'end_at' => 'Akhir sewa invalid',
+                'price' => 'Harga',
+                'bukti_tf' => 'Bukti Transfer',
+            ];
+            $room = Room::find($request['id']);
+            $user = Auth::id();
+            $booking = [
+                'order_code' => $this->genFaktur(),
+                'user_id' => $user,
+                'room_id' => $room->id,
+                'start_at' => null,
+                'end_at' => null,
+                'price' => $room->price,
+                'bukti_tf' => $image_path,
+                'status_id' => 1,
+            ];
+            $validator = Validator::make($booking, $rules, $messages, $attributes)->validate();
+            Booking::create($validator);
+            DB::commit();
+            return redirect()->route('front.index');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
-    
+    public function genFaktur()
+    {
+        $count = DB::table('bookings')->count();
+        $date = Carbon::now();
+        $gen  = "ORDER/" . substr($date->year, -2) . '/' . $date->month . '/';
+        $x = '';
+        if ($count == 0) {
+            $x = $gen . '0001';
+        } else {
+            $last = Booking::latest()->first();
+            if ($last) {
+                $lastChar = substr($last->order_code, -4);
+                $nr =  str_pad($lastChar + 1, 4, "0", STR_PAD_LEFT);
+                $x = $gen . $nr;
+            }
+        }
+        $faktur = $x;
+        return $faktur;
+    }
+
+    public function history()
+    {
+        $bookings = Booking::where('user_id', Auth::id())
+            ->orderByDesc("id")
+            ->paginate(10)
+            ->withQueryString();
+        // return $bookings;
+        return Inertia::render('front/history', [
+            'histories' => $bookings,
+            'name' => 'Riwayat saya'
+        ]);
+    }
 }

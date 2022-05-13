@@ -1,94 +1,14 @@
-=TABEL
-rules-ok
--desc
--urutan
--img
-tipe room-ok
--desc;ex duluxe, preimium dll
-room-ok
--nomer room
--lantai
--tipe room
-user-ok
--nik
--nama
--dob
--email
--pass
-admin-ok
--nama
--email
--pass
-sewa/booking-ok
--faktur/ordercode
--room_id
--durasi(hari)
--start_at
--end_at
-deposit-ok
--user_id
--jumlah
--status
-balance/catatan keuangan-ok
--order_id
--deposit_id
--user_id
--jumlah
-report
--sewa bulanan
--sewa tahunan
-visit
--ipaddress
-wa messaging
-notifboking
--user_id
--messages
--dikirim(1,2,3 atau lebih)
-=FRONTEND KOMPRO
-index
-fasilitas
-tata cara penyewaan
-peraturan
-=BACKEND CURD
-user-ok
--c
--r
--u
--d
-rules-ok
--c
--r
--u
--d
-tipe room
--c
--r
--u
--d
-admin-ok
--c
--r
--u
--d
-booking
--c
--r
--u
--d
-deposito
--c
--r
--u
--d
-fasilitas
--c
--r
--u
--d
-
-
-depositnya di hilangin aja langsung approval
-harga kamar per kamar
-filter kamar fasilitas kamar(waktu milih kamar).
-informasi nomer bank(ada lama batas transfer)
-user + 
+user-detail ktp(modal)-ok
+tipe room standar semua-ok
+REQ LIST FASILITAS & HARGA-ok
+front pencarian room by fasilitas
+req foto ukuran sama**
+front google maps
+tata cara di gabung dgn peraturan-ok
+di tata cara ada CP WA-ok
+tulisannya agak di besarin(buat dokumentasi)
+warna di terangin?*
+===========batch2
+swal dari controller ke tampilan vue stlh berhasil booking
+--laporan sewa
+--laporan keuangan

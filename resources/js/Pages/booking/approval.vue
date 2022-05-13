@@ -38,7 +38,7 @@
                         type="text"
                         data-kt-customer-table-filter="search"
                         class="form-control form-control-solid w-250px ps-15"
-                        placeholder="Search By Nomor Room"
+                        placeholder="Search By Nomor Faktur"
                         @input="_search($event.target.value)"
                     />
                 </div>
@@ -50,7 +50,7 @@
                 <!--begin::Toolbar-->
                 <div class="d-flex">
                     <Link
-                        :href="route('room.create')"
+                        :href="route('rule.create')"
                         type="button"
                         class="btn btn-light-primary btn-sm"
                     >
@@ -87,31 +87,47 @@
             >
                 <thead>
                     <tr>
-                        <th class="min-w-5px">No Room</th>
-                        <th class="min-w-5px">Lantai</th>
-                        <th class="min-w-125px">Tipe</th>
-                        <th class="min-w-150px">Harga</th>
-                        <th class="min-w-100px">Status</th>
+                        <th class="min-w-50px">Status</th>
+                        <th class="min-w-75px">Faktur</th>
+                        <th class="min-w-100px">Pengguna</th>
+                        <th class="min-w-25px">Nomor Room</th>
+                        <th class="min-w-100px">Rincian</th>
+                        <th class="min-w-100px">Biaya</th>
                         <th class="min-w-50px"></th>
                     </tr>
                 </thead>
                 <tbody class="fw-bold text-gray-600">
-                    <tr v-for="(row, i) in rooms.data" :key="row.id">
+                    <tr v-for="row in bookings.data" :key="row.id">
                         <td>
-                            {{ row.nomor_room }}
+                            <div v-html="row.statusSpan"></div>
                         </td>
                         <td>
-                            {{ row.lantai }}
+                            {{ row.order_code }}
                         </td>
                         <td>
-                            {{ row.tipe_room.desc }}
+                            {{ row.user.nama }}
+                        </td>
+                        <td>
+                            {{ row.room.nomor_room }}
+                        </td>
+                        <td>
+                            Tgl Pemesanan : {{ row.created_at }}
+                            <hr />
+                            <div v-if="row.start_at == null">
+                                Tgl mulai sewa : Belum ditetapkan
+                            </div>
+                            <div v-else>
+                                Tgl mulai sewa : {{ row.start_at }}
+                            </div>
+                            <div v-if="row.end_at == null">
+                                Tgl sewa berakhir : Belum ditetapkan
+                            </div>
+                            <div v-else>
+                                Tgl sewa berakhir : {{ row.end_at }}
+                            </div>
                         </td>
                         <td>
                             {{ $filters.currency(row.price) }}
-                        </td>
-                        <td>
-                            <div v-html="row.tersedia.span">                                
-                            </div>
                         </td>
                         <td class="text-end">
                             <div
@@ -119,9 +135,10 @@
                                 role="group"
                                 aria-label="Basic example"
                             >
-                                <Link
-                                    :href="route('room.show', row.id)"
+                                <button
+                                    type="button"
                                     class="btn btn-icon btn-sm btn-active-light-primary w-30px h-30px me-3"
+                                    @click="_img(row)"
                                 >
                                     <span class="svg-icon svg-icon-3">
                                         <svg
@@ -137,31 +154,11 @@
                                             />
                                         </svg>
                                     </span>
-                                </Link>
-                                <Link
-                                    :href="route('room.edit', row.id)"
-                                    type="button"
-                                    class="btn btn-icon btn-sm btn-active-light-primary w-30px h-30px me-3"
-                                >
-                                    <span class="svg-icon svg-icon-3">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="16"
-                                            height="16"
-                                            fill="orange"
-                                            class="bi bi-pen"
-                                            viewBox="0 0 16 16"
-                                        >
-                                            <path
-                                                d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"
-                                            />
-                                        </svg>
-                                    </span>
-                                </Link>
+                                </button>
                                 <button
                                     type="button"
                                     class="btn btn-icon btn-sm btn-active-light-primary w-30px h-30px me-3"
-                                    @click="_remove(row.id)"
+                                    @click="_cancel(row)"
                                 >
                                     <span class="svg-icon svg-icon-3">
                                         <svg
@@ -178,22 +175,74 @@
                                         </svg>
                                     </span>
                                 </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-icon btn-sm btn-active-light-primary w-30px h-30px me-3"
+                                    @click="_approve(row)"
+                                >
+                                    <span class="svg-icon svg-icon-2">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            fill="lime"
+                                            class="bi bi-check-lg"
+                                            viewBox="0 0 16 16"
+                                        >
+                                            <path
+                                                d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"
+                                            />
+                                        </svg>
+                                    </span>
+                                </button>
                             </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <div class="modal-footer flex-center" v-if="rooms.data.length < 1">
+            <div
+                class="modal-footer flex-center"
+                v-if="bookings.data.length < 1"
+            >
                 {{ name }} tidak ditemukan
             </div>
             <pagination
                 class="mt-6 dataTables_paginate paging_simple_numbers"
-                :links="rooms.links"
+                :links="bookings.links"
             />
             <!--end::Table-->
         </div>
-        <!--end::Card body-->
     </div>
+    <!-- modal -->
+    <div class="modal fade" id="modal_detail" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen p-10">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        BUKTI TRANSFER FAKTUR NO : {{ data_modal.order_code }}
+                    </h5>
+
+                    <!--begin::Close-->
+                    <div
+                        class="btn btn-icon btn-sm btn-active-light-primary ms-2"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span class="svg-icon svg-icon-2x"></span>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <div class="modal-body">
+                    <img
+                        :src="data_modal.bukti_tf"
+                        class="img-responsive"
+                        style="max-width: 1200px !important"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end modal -->
 </template>
 <script>
 import LayoutApp from "@/Layouts/Admin.vue";
@@ -210,21 +259,23 @@ export default {
     },
     props: {
         name: String,
-        rooms: Object,
+        bookings: Object,
     },
     data() {
         return {
-            search: "",
-            edit: false,
-            formLoading: false,
+            url: null,
+            data_modal: {
+                nama: "",
+                nik: "",
+            },
         };
     },
     created() {},
     methods: {
         _search(val) {
             this.$inertia.get(
-                route("room.index"),
-                { nomor_room: val },
+                route("rule.index"),
+                { desc: val },
                 {
                     preserveScroll: true,
                     preserveState: true,
@@ -233,34 +284,80 @@ export default {
                 }
             );
         },
-        _remove(id) {
+        _img(row) {
+            this.data_modal.bukti_tf = "/storage/" + row.bukti_tf;
+            this.data_modal.order_code = row.order_code;
+            $("#modal_detail").modal("show");
+        },
+        _approve(row) {
             Swal.fire({
-                title: "Konfirmasi",
-                text: "Apakah anda ingin menghapus data ini ?",
+                title: "Approve " + row.order_code,
+                html: "Apakah anda ingin approve booking ini ? </br> maka akan berlaku mulai sekarang hingga 1 (satu) bulan kedepan",
                 showCancelButton: true,
-                // confirmButtonColor: "lightblue",
-                // cancelButtonColor: "red",
-                confirmButtonText: "Ya, Saya yakin !",
+                confirmButtonColor: "green",
+                cancelButtonColor: "maroon",
+                confirmButtonText: "Ya, Approve Faktur ini",
                 reverseButtons: true,
             }).then((result) => {
                 if (result.value) {
-                    this.$inertia.delete(route("room.destroy", id), {
-                        preserveScroll: true,
-                        onSuccess: (success) => {
-                            // alert('a');
-                            console.log(success);
-                            Toast.fire({
-                                icon: "success",
-                                title: "Berhasil dihapus",
-                            });
+                    this.$inertia.post(
+                        route("approve"),
+                        {
+                            id: row.id,
                         },
-                        onError: (error) => {
-                            Toast.fire({
-                                icon: "Ooops",
-                                title: "somethin wrong!",
-                            });
+                        {
+                            preserveScroll: true,
+                            onSuccess: (success) => {
+                                console.log(success);
+                                Toast.fire({
+                                    icon: "success",
+                                    title: "Berhasil dihapus",
+                                });
+                            },
+                            onError: (error) => {
+                                Toast.fire({
+                                    icon: "Ooops",
+                                    title: "somethin wrong!",
+                                });
+                            },
+                        }
+                    );
+                }
+            });
+        },
+        _cancel(row) {
+            Swal.fire({
+                title: "Cancel " + row.order_code,
+                html: "Apakah anda ingin cancel booking ini ?",
+                showCancelButton: true,
+                confirmButtonColor: "marron",
+                // cancelButtonColor: "maroon",
+                confirmButtonText: "Ya, Cancel",
+                reverseButtons: true,
+            }).then((result) => {
+                if (result.value) {
+                    this.$inertia.post(
+                        route("cancelOrder"),
+                        {
+                            id: row.id,
                         },
-                    });
+                        {
+                            preserveScroll: true,
+                            onSuccess: (success) => {
+                                console.log(success);
+                                Toast.fire({
+                                    icon: "success",
+                                    title: "Berhasil dihapus",
+                                });
+                            },
+                            onError: (error) => {
+                                Toast.fire({
+                                    icon: "Ooops",
+                                    title: "somethin wrong!",
+                                });
+                            },
+                        }
+                    );
                 }
             });
         },
