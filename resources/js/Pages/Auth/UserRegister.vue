@@ -4,8 +4,8 @@
         <div
             class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20"
             style="
-            background-image: url(/assets/media/illustrations/sketchy-1/14.png;;
-        "
+                background-image: url(/assets/media/illustrations/sketchy-1/14.png;;;;;;;
+            "
         >
             <!--begin::Logo-->
             <a class="mb-12">
@@ -31,9 +31,11 @@
                             <!--begin::Link-->
                             <div class="text-gray-400 fw-bold fs-4">
                                 Sudah memiliki akun?
-                                <Link :href="route('login')" class="link-primary fw-bolder"
-                                >Halaman Login</Link
-                            >
+                                <Link
+                                    :href="route('login')"
+                                    class="link-primary fw-bolder"
+                                    >Halaman Login</Link
+                                >
                             </div>
                             <!--end::Link-->
                         </div>
@@ -81,7 +83,7 @@
                                 >No Whatsapp</label
                             >
                             <input
-                                class="form-control form-control-lg form-control-solid"
+                                class="form-control form-control-lg form-control-solid mb-5"
                                 type="email"
                                 placeholder=""
                                 name="email"
@@ -89,6 +91,15 @@
                                 v-model="form.telp"
                                 requried
                             />
+                            <center>
+                                <a
+                                    href="https://api.whatsapp.com/send/?phone=14155238886&text=join+police-health&app_absent=0"
+                                    target="_blank"
+                                    class="btn btn-info btn-sm"
+                                >
+                                    Subscribe Notif Whatsapp
+                                </a>
+                            </center>
                         </div>
                         <!--begin::Input group-->
                         <div class="fv-row mb-7">
