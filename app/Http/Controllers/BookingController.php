@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\User;
+use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Twilio\Rest\Client;
 
 class BookingController extends Controller
 {
@@ -141,6 +144,73 @@ class BookingController extends Controller
 
     public function reminder()
     {
-        // $users = User::all();
+        $raw7 = Booking::where('end_at', '<', Carbon::now()->addDays(7))->get();
+        $raw3 = Booking::where('end_at', '<', Carbon::now()->addDays(3));
+        $raw = Booking::where('end_at', '<', Carbon::now()->addDays(1));
+        #send Notif twilio
+        foreach ($raw7 as $key => $value) {
+            $this->sendNotif($value->user, 7);
+        }
+        foreach ($raw3 as $key => $value) {
+            $this->sendNotif($value->user, 3);
+        }
+        foreach ($raw as $key => $value) {
+            $this->sendNotif($value->user, 1);
+        }
+        return 'ok';
+    }
+
+    public function sendNotif(User $recipient, $hari)
+    {
+        $sid    = getenv("TWILIO_AUTH_SID");
+        $token  = getenv("TWILIO_AUTH_TOKEN");
+        $wa_from = getenv("TWILIO_WHATSAPP_FROM");
+        $twilio = new Client($sid, $token);
+
+        $body = "Hai " . $recipient->nama . ' sewa kamu akan berakhir dalam: ' . $hari . ' lagi, harap segera memperbarui sewa ya :)';
+
+        $msg = $twilio->messages->create(
+            "whatsapp:" . $recipient->telp,
+            ["from" => "whatsapp:" . $wa_from, "body" => $body]
+        );
+    }
+
+    public function test()
+    {
+        $sid    = getenv("TWILIO_AUTH_SID");
+        $token  = getenv("TWILIO_AUTH_TOKEN");
+        $wa_from = getenv("TWILIO_WHATSAPP_FROM");
+        $twilio = new Client($sid, $token);
+
+        $body = "Hai  sewa kamu akan berakhir dalam:  lagi, harap segera memperbarui sewa ya :)";
+
+        $msg = $twilio->messages->create(
+            "whatsapp:" . "6282299825920",
+            ["from" => "whatsapp:" . $wa_from, "body" => $body]
+        );
+        print($msg);
+    }
+
+    public function reportPage()
+    {
+        return Inertia::render('report/index', [
+            'name' => 'Generate Report'
+        ]);
+    }
+
+    public function reportGenerate(Request $request)
+    {
+        // $data = $request->all();
+        // return $data;
+        $bookings = Booking::where('start_at', '>', $request->start_at)
+            ->where('end_at', '>', $request->end_at)->get();
+        $tgl = [
+            'start' => $request->start_at,
+            'end' => $request->end_at,
+        ];
+        $pdf = PDF::loadview('report.sewa', compact('bookings', 'tgl'));
+        // $pdf->setPaper(array(0, 0, 700.00, 793.7), $this->layout);
+        // return $pdf->download('report-bulanan.pdf');
+        return $pdf->stream('report-bulanan.pdf');
     }
 }

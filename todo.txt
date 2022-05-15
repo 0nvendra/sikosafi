@@ -1,3 +1,6 @@
+db : u1558475_sikosafi
+u : u1558475_u_sikosafi
+pass : MFXb8MD8n4Md
 user-detail ktp(modal)-ok
 tipe room standar semua-ok
 REQ LIST FASILITAS & HARGA-ok
@@ -7,9 +10,9 @@ di tata cara ada CP WA-ok
 tulisannya agak di besarin(buat dokumentasi)
 warna di terangin?*
 ===========batch2
-front-pencarian room by fasilitas
-front-google maps
-swal dari controller ke tampilan vue stlh berhasil booking
+front-pencarian room by fasilitas-ok
+front-google maps-ok
+swal dari controller ke tampilan vue stlh berhasil booking-ok
 ubah jadi syarat dan ketentuan
 --laporan sewa
 --laporan keuangan

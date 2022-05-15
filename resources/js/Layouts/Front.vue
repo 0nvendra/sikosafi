@@ -141,13 +141,14 @@
                                 <!--end::Menu link-->
                             </div>
                             <div class="text-end ms-1" v-if="user != null">
-                                <Link
-                                    :href="route('logout')"
+                                <button
+                                    @click="_logout"
                                     class="btn btn-success"
                                     data-kt-scroll-toggle="true"
                                     data-kt-drawer-dismiss="true"
-                                    >Logout</Link
                                 >
+                                    Logout
+                                </button>
                             </div>
 
                             <!--end::Toolbar-->
@@ -187,27 +188,31 @@
                 <div class="container">
                     <!--begin::Wrapper-->
                     <div
-                        class="d-flex flex-column flex-md-row flex-stack py-7 py-lg-10"
+                        class="d-flex flex-center"
                     >
                         <!--begin::Copyright-->
-                        <div
-                            class="d-flex align-items-center order-2 order-md-1"
-                        >
-                            <!--begin::Logo image-->
-                            <span
-                                class="mx-5 fs-6 fw-bold text-gray-600 pt-1"
-                                href="https://keenthemes.com"
-                                >© 2022 SIKOSAFI</span
-                            >
-
-                            <!--end::Logo image-->
-                        </div>
+                        
                         <!--end::Copyright-->
                         <!--begin::Menu-->
                         <ul
-                            class="menu menu-gray-600 menu-hover-primary fw-bold fs-6 fs-md-5 order-1 mb-5 mb-md-0"
+                            class="menu menu-gray-600 menu-hover-primary fw-bold fs-6 fs-md-5 order-1 mb-5 mb-md-0 "
                         >
-                            <li class="menu-item">
+                            <li class="menu-item mx-5">
+                                <iframe
+                                    src="https://maps.google.com/maps?q=-0.4639024,117.1490956&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                                    height="300"
+                                    width="700"
+                                    style="border: 0"
+                                    allowfullscreen=""
+                                    aria-hidden="false"
+                                    tabindex="0"
+                                ></iframe>
+                                <p style="color: white">
+                                    Awang Faroek Institute, Jl. M Yamin, No 20,
+                                    <br />
+                                    Gunung kelua, Kec. Samarinda Ulu, Kota
+                                    Samarinda, Kalimantan Timur 75123
+                                </p>
                                 <a
                                     href="https://wa.me/6281345555506"
                                     target="_blank"
@@ -226,14 +231,6 @@
                                     </svg>
                                 </a>
                             </li>
-                            <li class="menu-item mx-5">
-                                <p style="color: white">
-                                    Awang Faroek Institute, Jl. M Yamin, No 20,
-                                    <br />
-                                    Gunung kelua, Kec. Samarinda Ulu, Kota
-                                    Samarinda, Kalimantan Timur 75123
-                                </p>
-                            </li>
                         </ul>
                         <!--end::Menu-->
                     </div>
@@ -249,15 +246,21 @@
 <script>
 import { Head, Link } from "@inertiajs/inertia-vue3";
 import NavLink from "@/components/ResponsiveNavLink.vue";
+// maps
+import { GoogleMap, Marker } from "vue3-google-map";
 export default {
     components: {
         Head,
         Link,
         NavLink,
+        // maps
+        GoogleMap,
+        Marker,
     },
     data() {
         return {
             user: null,
+            map_position : { lat: 40.689247, lng: -74.044502 }
         };
     },
     created() {
@@ -269,6 +272,30 @@ export default {
         console.log(this.user);
     },
 
-    methods: {},
+    methods: {
+        _logout() {
+            this.$inertia.get(
+                route("logout"),
+                {},
+                {
+                    preserveScroll: true,
+                    onSuccess: (success) => {
+                        Toast.fire({
+                            icon: "success",
+                            title: "Logout berhasil",
+                        });
+                        window.location.href = route("front.index");
+                        window.location.reload;
+                    },
+                    onError: (error) => {
+                        this.errors = [];
+                        Object.entries(this.$attrs.errors).map((arr) => {
+                            this.errors.push(arr[1]);
+                        });
+                    },
+                }
+            );
+        },
+    },
 };
 </script>

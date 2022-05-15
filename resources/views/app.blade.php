@@ -13,8 +13,8 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('metronic/css/style.bundle.css') }}">
     <link rel="stylesheet" href="{{ asset('metronic/css/plugins.bundle.css') }}">
-    
-    
+
+
     <!-- Scripts -->
     @routes
     <script src="{{ mix('js/app.js') }}" defer></script>
@@ -22,6 +22,7 @@
 </head>
 
 <body class="font-sans antialiased">
+    @include('sweetalert::alert')
     @inertia
 
     @env ('local')

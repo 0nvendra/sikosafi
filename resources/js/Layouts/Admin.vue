@@ -324,7 +324,7 @@
                             </div>
                             <div class="menu-item">
                                 <NavLink
-                                    :href="route('user.index')"
+                                    :href="route('report')"
                                     class="menu-link"
                                 >
                                     <span class="menu-icon">

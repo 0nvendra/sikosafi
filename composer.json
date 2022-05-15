@@ -13,6 +13,7 @@
         "laravel/framework": "^9.2",
         "laravel/sanctum": "^2.8",
         "laravel/tinker": "^2.7",
+        "realrashid/sweet-alert": "^5.0",
         "tightenco/ziggy": "^1.0",
         "twilio/sdk": "^6.37"
     },

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class FrontController extends Controller
 {
@@ -27,9 +28,10 @@ class FrontController extends Controller
         //     ->orderBy('date', 'desc')
         //     ->get();
         // return $data;
-        Visitor::create([
+        $v = Visitor::create([
             'ip' => request()->ip(),
         ]);
+        // Alert::success('Congrats', 'You\'ve Successfully Registered');
         // $rooms = Room::when($request->nomor_room, function ($query, $q) {
         //     $query->where('nomor_room', 'like', '%' . $q . '%');
         // })
@@ -47,8 +49,15 @@ class FrontController extends Controller
         //     })
         //     ->paginate(100)
         //     ->withQueryString();
-        // // return $rooms;
-        return Inertia::render('front/index');
+        // return $rooms;
+        $param = "";
+        if (session()->get('msg')) {
+            // Alert::success('Berhasil', session()->get('msg'));
+            $param = "Booked berhasil, harap tunggu konfirmasi admin";
+        }
+        return Inertia::render('front/index', [
+            'msg' => $param
+        ]);
     }
 
     public function tataCara()
@@ -58,21 +67,10 @@ class FrontController extends Controller
 
     public function room(Request $request)
     {
-        $rooms = Room::when($request->nomor_room, function ($query, $q) {
-            $query->where('nomor_room', 'like', '%' . $q . '%');
+        $searchString = $request->fasilitas;
+        $rooms = Room::whereHas('fasilitas', function ($query) use ($searchString) {
+            $query->where('desc', 'like', '%' . $searchString . '%');
         })
-            ->when($request->lantai, function ($query, $q) {
-                $query->where('lantai', 'like', '%' . $q . '%');
-            })
-            ->when($request->tipe, function ($query, $q) {
-                $arr = TipeRoom::where('desc', 'like', '%' . $q . '%')->pluck('id')->toArray();
-                $query->whereIn('id', [$arr]);
-            })
-            ->when($request->fasilitas, function ($query, $q) {
-                $arr = Fasilitas::where('desc', 'like', '%' . $q . '%')->pluck('id')->toArray();
-                // dd($arr);
-                $query->whereIn('id', [$arr]);
-            })
             ->paginate(100)
             ->withQueryString();
         // return $rooms;
@@ -98,7 +96,7 @@ class FrontController extends Controller
         //     return redirect()->route('login');
         // }
         // Auth::id();
-        try {            
+        try {
             DB::beginTransaction();
             $image_path = '';
             if ($request->hasFile('image')) {
@@ -143,9 +141,10 @@ class FrontController extends Controller
             $validator = Validator::make($booking, $rules, $messages, $attributes)->validate();
             Booking::create($validator);
             DB::commit();
-            return redirect()->route('front.index');
+            return redirect()->route('front.index')->with(['msg' => true]);
         } catch (\Throwable $th) {
             DB::rollBack();
+            // return $th;
             throw $th;
         }
     }

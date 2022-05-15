@@ -193,9 +193,19 @@
                     <center>
                         <img v-if="url" :src="url" class="w-50 h-80" />
                     </center>
+                    <div class="pb-10 pb-lg-12">
+                        <!--begin::Title-->
+                        <div v-if="errors.length">
+                            <b>Terjadi kesalahan:</b>
+                            <ul>
+                                <li v-for="err in errors" :key="err.id">
+                                    {{ err }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer flex-center">
-                    <!--begin::Button-->
                     <button
                         type="submit"
                         class="btn btn-danger"
@@ -226,6 +236,7 @@ export default {
             sClass: "col-md-4",
             data_modal: {},
             url: null,
+            errors: [],
         };
     },
     created() {},
@@ -234,7 +245,7 @@ export default {
             if (val == "") {
                 this.sClass = "col-md-4";
             } else {
-                this.sClass = "col-md-12";
+                this.sClass = "col-md-4";
             }
             this.$inertia.get(
                 route("front.room"),
@@ -250,6 +261,7 @@ export default {
         _preOrder(row) {
             this.data_modal = row;
             $("#modal_order").modal("show");
+            $(".modal-backdrop").remove();
             // alert("ok?");
         },
         previewImage(e) {
@@ -257,19 +269,12 @@ export default {
             this.url = URL.createObjectURL(file);
         },
         _order() {
-            $(".modal-backdrop").remove();
             if (this.$refs.photo) {
                 this.data_modal.image = this.$refs.photo.files[0];
             }
             this.$inertia.post(route("order"), this.data_modal, {
                 preserveScroll: true,
-                onSuccess: (success) => {
-                    // Swal.fire({
-                    //     icon: "success",
-                    //     title: "Room Booked",
-                    //     text: "Bukti transfer akan di check. Harap menunggu konfirmasi admin",
-                    // });
-                },
+                onSuccess: (success) => {},
                 onError: (error) => {
                     this.errors = [];
                     Object.entries(this.$attrs.errors).map((arr) => {

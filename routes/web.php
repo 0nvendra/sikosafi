@@ -47,9 +47,13 @@ Route::group(['prefix' => ''], function () {
     Route::get('/evaluasi', [UserController::class, 'evaluasi'])->name('evaluasi');
     Route::group(['middleware' => 'auth:web'], function () {
         Route::post('/order', [FrontController::class, 'newOrder'])->name('order');
-        Route::get('/history-saya', [FrontController::class, 'history'])->name('front.history');
+        Route::get('/history-saya', [BookingController::class, 'whatsappNotification'])->name('front.history');
     });
 });
+
+#Reminder
+Route::get('/reminder-notif', [BookingController::class, 'reminder'])->name('reminderNotif');
+Route::get('/test-notif', [BookingController::class, 'test'])->name('testNotif');
 
 // Route::get('/dashboard', function () {
 //     return redirect()->route('user.index');
@@ -72,5 +76,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::post('approve', [BookingController::class, 'approve'])->name('approve');
     Route::post('cancelOrder', [BookingController::class, 'cancelOrder'])->name('cancelOrder');
     Route::get('daftar-boking', [BookingController::class, 'listed'])->name('listed');
+    #report
+    Route::get('report', [BookingController::class, 'reportPage'])->name('report');
+    Route::get('generate-report', [BookingController::class, 'reportGenerate'])->name('getReport');
 });
 // require __DIR__ . '/auth.php';
