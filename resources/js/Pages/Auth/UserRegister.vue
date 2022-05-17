@@ -80,8 +80,9 @@
                         <div class="fv-row mb-7">
                             <label
                                 class="required form-label fw-bolder text-dark fs-6"
-                                >No Whatsapp</label
+                                >No Whatsapp ex: +6281234567890</label
                             >
+                            
                             <input
                                 class="form-control form-control-lg form-control-solid mb-5"
                                 type="email"

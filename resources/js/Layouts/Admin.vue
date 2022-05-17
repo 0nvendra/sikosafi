@@ -463,7 +463,7 @@
                                             <!--begin::Menu item-->
                                             <div class="menu-item px-5">
                                                 <Link
-                                                    :href="route('logout')"
+                                                    :href="route('admin.logout')"
                                                     class="menu-link px-5"
                                                     >Logout</Link
                                                 >

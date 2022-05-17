@@ -89,13 +89,6 @@ class FrontController extends Controller
 
     public function newOrder(Request $request)
     {
-        // return $request->all();
-        // return Inertia::render('front/home');
-        // if (Auth::user() == []) {
-        //     return 
-        //     return redirect()->route('login');
-        // }
-        // Auth::id();
         try {
             DB::beginTransaction();
             $image_path = '';

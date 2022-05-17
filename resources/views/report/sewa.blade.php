@@ -105,21 +105,34 @@
         <table class="table">
             <thead>
                 <tr style="background-color: grey;">
-                    <th>Pengguna</th>
+                    <th>NO Kamar</th>
+                    <th>Penyewa</th>
+                    <th>Fasilitas</th>
                     <th>Tgl mulai sewa</th>
                     <th>Tgl akhir sewa</th>
-                    <th>Pendapatan</th>
+                    <th>Harga</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($bookings as $i => $booking)
                 <tr>
+                    <td><center>{{ $booking->room->nomor_room }}</center></td>
                     <td>{{ $booking->User->nama }}</td>
+                    <td>
+                    {{$booking->room->fasilitas->descF[1]}}
+                    </td>
                     <td>{{ date('j F, Y', strtotime($booking->start_at)) }}</td>
                     <td>{{date('j F, Y', strtotime($booking->end_at)) }}</td>
                     <td>Rp. {{ @currency($booking->price) }}</td>
                 </tr>
                 @endforeach
+                <tr>
+                    <td colspan="6"><hr></td>
+                </tr>
+                <tr style="background-color: silver;">
+                    <td colspan="5"><center><b>GrandTotal</b></center></td>
+                    <td>Rp. {{ @currency($gt) }}</td>
+                </tr>
             </tbody>
         </table>
     </div>

@@ -347,7 +347,7 @@ export default {
                                 console.log(success);
                                 Toast.fire({
                                     icon: "success",
-                                    title: "Berhasil dihapus",
+                                    title: "Berhasil disetujui",
                                 });
                             },
                             onError: (error) => {

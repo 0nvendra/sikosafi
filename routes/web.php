@@ -47,7 +47,7 @@ Route::group(['prefix' => ''], function () {
     Route::get('/evaluasi', [UserController::class, 'evaluasi'])->name('evaluasi');
     Route::group(['middleware' => 'auth:web'], function () {
         Route::post('/order', [FrontController::class, 'newOrder'])->name('order');
-        Route::get('/history-saya', [BookingController::class, 'whatsappNotification'])->name('front.history');
+        Route::get('/history-saya', [FrontController::class, 'history'])->name('front.history');
     });
 });
 

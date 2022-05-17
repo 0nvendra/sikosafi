@@ -16,4 +16,17 @@ swal dari controller ke tampilan vue stlh berhasil booking-ok
 ubah jadi syarat dan ketentuan
 --laporan sewa
 --laporan keuangan
-whtasapp message
+whtasapp message-ok
+scroll user register gk ada
+najmiatul magfira
+notif stlh pesan masih belum masuk
+report di hari mslh-ok
+==========batch3
+*admin - halaman user & edit user (email tidak muncul)-ok
+
+*admin - hapaman user (gambar KTP tidak muncul)-ok krna data gk ada
+
+*admin - halaman approval (ketika mencari nomor faktur langsung teralih ke halaman peraturan?)-ok
+*admin - add booking approval (knp ada Add Rule untuk edit peraturan?)-ok
+
+*halaman login admin (sebelum login dan setelah logout berbeda halaman) setelah logout harusnya muncul halaman admin login-ok

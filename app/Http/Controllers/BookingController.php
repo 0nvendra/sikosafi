@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Room;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
@@ -144,6 +145,7 @@ class BookingController extends Controller
 
     public function reminder()
     {
+        #jam 10
         $raw7 = Booking::where('end_at', '<', Carbon::now()->addDays(7))->get();
         $raw3 = Booking::where('end_at', '<', Carbon::now()->addDays(3));
         $raw = Booking::where('end_at', '<', Carbon::now()->addDays(1));
@@ -202,13 +204,18 @@ class BookingController extends Controller
     {
         // $data = $request->all();
         // return $data;
+        // $room = Room::all();
+        // return $room;
         $bookings = Booking::where('start_at', '>', $request->start_at)
-            ->where('end_at', '>', $request->end_at)->get();
+            ->where('end_at', '>', $request->end_at); //->get();
         $tgl = [
             'start' => $request->start_at,
             'end' => $request->end_at,
         ];
-        $pdf = PDF::loadview('report.sewa', compact('bookings', 'tgl'));
+        $gt = $bookings->sum('price');
+        $bookings = $bookings->get();
+        // return $bookings;
+        $pdf = PDF::loadview('report.sewa', compact('bookings', 'tgl','gt'));
         // $pdf->setPaper(array(0, 0, 700.00, 793.7), $this->layout);
         // return $pdf->download('report-bulanan.pdf');
         return $pdf->stream('report-bulanan.pdf');
