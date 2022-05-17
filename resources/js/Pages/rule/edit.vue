@@ -5,7 +5,7 @@
                 <h1
                     class="d-flex align-items-center text-dark fw-bolder fs-3 my-1"
                 >
-                    Add {{ name }}
+                    Edit {{ name }}
                 </h1>
             </div>
         </div>

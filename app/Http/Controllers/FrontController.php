@@ -162,9 +162,11 @@ class FrontController extends Controller
         return $faktur;
     }
 
-    public function history()
+    public function history(Request $request)
     {
-        $bookings = Booking::where('user_id', Auth::id())
+        $bookings = Booking::when($request->faktur, function ($query, $q) {
+            $query->where('order_code', 'like', '%' . $q . '%');
+        })->where('user_id', Auth::id())
             ->orderByDesc("id")
             ->paginate(10)
             ->withQueryString();

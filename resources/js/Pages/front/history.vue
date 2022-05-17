@@ -196,6 +196,18 @@ export default {
     },
     created() {},
     methods: {
+        _search(val) {
+            this.$inertia.get(
+                route("front.history"),
+                { faktur: val },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    onSuccess: (success) => {},
+                    onError: (error) => {},
+                }
+            );
+        },
         _img(row) {
             this.data_modal.bukti_tf = "/storage/" + row.bukti_tf;
             this.data_modal.order_code = row.order_code;

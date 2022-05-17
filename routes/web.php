@@ -44,7 +44,7 @@ Route::group(['prefix' => ''], function () {
     Route::get('/register', [UserController::class, 'getRegister'])->name('register');
     Route::post('/register', [UserController::class, 'postRegister'])->name('user.register');
     Route::get('/logout', [UserController::class, 'logout'])->name('logout');
-    Route::get('/evaluasi', [UserController::class, 'evaluasi'])->name('evaluasi');
+    // Route::get('/evaluasi', [UserController::class, 'evaluasi'])->name('evaluasi');
     Route::group(['middleware' => 'auth:web'], function () {
         Route::post('/order', [FrontController::class, 'newOrder'])->name('order');
         Route::get('/history-saya', [FrontController::class, 'history'])->name('front.history');
