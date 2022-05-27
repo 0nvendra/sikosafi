@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -33,18 +34,23 @@ class Booking extends Model
 
     protected $with = ['room', 'user', 'admin'];
 
-    protected $appends = ['statusSpan'];
+    protected $appends = ['statusSpan', 'end_atF'];
+
+    public function GetEndAtFAttribute()
+    {
+        return Carbon::parse($this->end_at)->format('j F, Y');
+    }
 
     public function GetStatusSpanAttribute()
     {
         switch ($this->status_id) {
             case 1:
                 # code...
-                return '<span class="badge badge-light-info fs-8 fw-bolder">Diajukan</span>';
+                return '<span class="badge badge-light-info fs-8 fw-bolder">Bukti Transfer Diunggah</span>';
                 break;
             case 2:
                 # code...
-                return '<span class="badge badge-light-success fs-8 fw-bolder">Approved</span>';
+                return '<span class="badge badge-light-success fs-8 fw-bolder">Booked</span>';
                 break;
             case 1:
                 # code...

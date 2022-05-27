@@ -27,11 +27,14 @@ class Room extends Model
         $booking = Booking::where('room_id', $this->id)->orderByDesc('id')->first();
         $now = Carbon::now();
         $r = [];
-        if ($booking && $booking->end_at > $now) {
+        if (
+            $booking &&
+            Carbon::parse($booking->end_at) >= $now == true
+        ) {
             $r = [
                 'status' => false,
                 'span' => '<span class="badge badge-light-danger fs-8 fw-bolder">Booked</span>',
-                'end_contract' => $booking->end_at,
+                'end_contract' => $booking->end_atF,
             ];
         } else {
             $r = [

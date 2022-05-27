@@ -30,3 +30,6 @@ report di hari mslh-ok
 *admin - add booking approval (knp ada Add Rule untuk edit peraturan?)-ok
 
 *halaman login admin (sebelum login dan setelah logout berbeda halaman) setelah logout harusnya muncul halaman admin login-ok
+
+pemesanan room yg sama
+booked kalau udh dibayar

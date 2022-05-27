@@ -132,6 +132,10 @@ class FrontController extends Controller
                 'status_id' => 1,
             ];
             $validator = Validator::make($booking, $rules, $messages, $attributes)->validate();
+            #check dlu kalaus udh di booking/belum
+            $check = Booking::where('room_id', $room->id)
+                ->where('',)->first();
+
             Booking::create($validator);
             DB::commit();
             return redirect()->route('front.index')->with(['msg' => true]);

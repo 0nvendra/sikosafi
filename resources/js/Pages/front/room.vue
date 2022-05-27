@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="mb-17">
+        <div class="mb-4" style="overflow-y: scroll; height:1200px;">
             <!--begin::Content-->
             <div class="d-flex flex-stack mb-5">
                 <!--begin::Title-->

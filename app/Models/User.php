@@ -59,7 +59,7 @@ class User extends Authenticatable
     {
         switch ($this->status) {
             case 1:
-                return '<span class="badge badge-light-warning">Belum Verifikasi Email</span>';
+                return '<span class="badge badge-light-success">Aktif</span>';
                 break;
             case 2:
                 return '<span class="badge badge-light-success">Aktif</span>';

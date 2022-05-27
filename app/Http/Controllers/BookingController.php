@@ -115,7 +115,7 @@ class BookingController extends Controller
         $book->start_at = Carbon::now();
         $book->end_at = Carbon::now()->addDays(30);
         $book->admin_id = Auth::id();
-        $book->status_id = 2;
+        // $book->status_id = 2;
         $book->save();
         return redirect()->route('approval');
     }
