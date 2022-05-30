@@ -246,7 +246,7 @@ class UserController extends Controller
             DB::beginTransaction();
             $image_path = '';
             if ($request->hasFile('image')) {
-                $image_path = $request->file('image')->store('image', 'public');
+                $image_path = $request->file('image')->store('images', 'public');
             }
             $rules = [
                 'nama' => ['required'],
