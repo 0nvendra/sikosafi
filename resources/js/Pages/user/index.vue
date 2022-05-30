@@ -112,7 +112,7 @@
                         <td class="px-4 py-2">
                             <img
                                 @click="_img(row)"
-                                :src="row.ktp_img"
+                                :src="'/storage/' + row.ktp_img"
                                 style="
                                     width: 200px;
                                     height: 140px;
@@ -317,7 +317,7 @@ export default {
         _img(row) {
             this.data_modal.nama = row.nama;
             this.data_modal.nik = row.nik;
-            this.data_modal.ktp_img = row.ktp_img;
+            this.data_modal.ktp_img = "/storage/" + row.ktp_img;
             $("#modal_detail").modal("show");
         },
     },

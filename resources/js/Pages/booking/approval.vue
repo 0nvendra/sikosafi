@@ -251,7 +251,7 @@ export default {
             );
         },
         _img(row) {
-            this.data_modal.bukti_tf = row.bukti_tf;
+            this.data_modal.bukti_tf = "/storage/" + row.bukti_tf;
             this.data_modal.order_code = row.order_code;
             $("#modal_detail").modal("show");
         },
