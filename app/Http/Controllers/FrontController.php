@@ -96,7 +96,7 @@ class FrontController extends Controller
                 $image_path = $request->file('image')->store('image', 'public');
             }
             $rules = [
-                'order_code' => ['required'],
+                'order_code' => [''],
                 'user_id' => ['required'],
                 'room_id' => ['required'],
                 'start_at' => [''],
