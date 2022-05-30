@@ -125,9 +125,8 @@ class BookingController extends Controller
         $book = Booking::find($request->id);
         $book->admin_id = Auth::id();
         $book->status_id = 3;
-        $book->start_at = null;
-        $book->end_at = null;
         $book->save();
+        $book->delete();        
         return redirect()->route('approval');
     }
 
