@@ -112,7 +112,7 @@
                         <td class="px-4 py-2">
                             <img
                                 @click="_img(row)"
-                                :src="'/storage/' + row.ktp_img"
+                                :src="'/images/' + row.ktp_img"
                                 style="
                                     width: 200px;
                                     height: 140px;

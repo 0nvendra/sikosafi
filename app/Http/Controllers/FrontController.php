@@ -133,8 +133,8 @@ class FrontController extends Controller
             ];
             $validator = Validator::make($booking, $rules, $messages, $attributes)->validate();
             #check dlu kalaus udh di booking/belum
-            $check = Booking::where('room_id', $room->id)
-                ->where('',)->first();
+            // $check = Booking::where('room_id', $room->id)
+            //     ->where('',)->first();
 
             Booking::create($validator);
             DB::commit();
