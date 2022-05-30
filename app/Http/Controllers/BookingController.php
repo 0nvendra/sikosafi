@@ -125,6 +125,8 @@ class BookingController extends Controller
         $book = Booking::find($request->id);
         $book->admin_id = Auth::id();
         $book->status_id = 3;
+        $book->start_at = null;
+        $book->end_at = null;
         $book->save();
         return redirect()->route('approval');
     }
@@ -215,7 +217,7 @@ class BookingController extends Controller
         $gt = $bookings->sum('price');
         $bookings = $bookings->get();
         // return $bookings;
-        $pdf = PDF::loadview('report.sewa', compact('bookings', 'tgl','gt'));
+        $pdf = PDF::loadview('report.sewa', compact('bookings', 'tgl', 'gt'));
         // $pdf->setPaper(array(0, 0, 700.00, 793.7), $this->layout);
         // return $pdf->download('report-bulanan.pdf');
         return $pdf->stream('report-bulanan.pdf');
