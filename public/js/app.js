@@ -22948,7 +22948,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     _img: function _img(row) {
-      this.data_modal.bukti_tf = "/image/" + row.bukti_tf;
+      this.data_modal.bukti_tf = "/storage/" + row.bukti_tf;
       this.data_modal.order_code = row.order_code;
       $("#modal_detail").modal("show");
     },
@@ -34948,7 +34948,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       onClick: function onClick($event) {
         return $options._img(row);
       },
-      src: '/images/' + row.ktp_img,
+      src: '/storage/' + row.ktp_img,
       style: {
         "width": "200px",
         "height": "140px",
