@@ -93,7 +93,8 @@ class FrontController extends Controller
             DB::beginTransaction();
             $image_path = '';
             if ($request->hasFile('image')) {
-                $image_path = $request->file('image')->store('images', 'public');
+                $image_path = $request->file('image')->store('image', 'public');
+                return $image_path;
             }
             $rules = [
                 'order_code' => [''],
