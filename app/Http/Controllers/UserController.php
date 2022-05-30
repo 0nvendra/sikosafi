@@ -247,7 +247,7 @@ class UserController extends Controller
             $image_path = '';
             if ($request->hasFile('image')) {
                 $image_path = $request->file('image')->store('image', 'public');
-                return $image_path;
+                $image_path = "/storage/" . $image_path;
             }
             $rules = [
                 'nama' => ['required'],
